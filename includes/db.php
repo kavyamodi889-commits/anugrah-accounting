@@ -2,25 +2,29 @@
 /**
  * includes/db.php
  * Single, authoritative database configuration for Anugrah Accounting.
- * All other files must require_once this file — do NOT create separate DB configs.
+ * Environment-aware & Cloud-Ready (reads environment variables automatically).
  */
 
 // ============================================================
-// DATABASE CREDENTIALS
-// Update these for your environment.
+// DATABASE CREDENTIALS (Environment Variables with Local Fallback)
 // ============================================================
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'anugrah_accounting');
-define('DB_CHARSET', 'utf8mb4');
+$dbHost = getenv('DB_HOST') ? getenv('DB_HOST') : (defined('DB_HOST') ? DB_HOST : 'localhost');
+$dbUser = getenv('DB_USER') ? getenv('DB_USER') : (defined('DB_USER') ? DB_USER : 'root');
+$dbPass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : (defined('DB_PASS') ? DB_PASS : '');
+$dbName = getenv('DB_NAME') ? getenv('DB_NAME') : (defined('DB_NAME') ? DB_NAME : 'anugrah_accounting');
+$dbPort = getenv('DB_PORT') ? (int)getenv('DB_PORT') : 3306;
+
+if (!defined('DB_HOST')) define('DB_HOST', $dbHost);
+if (!defined('DB_USER')) define('DB_USER', $dbUser);
+if (!defined('DB_PASS')) define('DB_PASS', $dbPass);
+if (!defined('DB_NAME')) define('DB_NAME', $dbName);
+if (!defined('DB_CHARSET')) define('DB_CHARSET', 'utf8mb4');
 
 // ============================================================
-// ERROR REPORTING — environment-aware
+// ERROR REPORTING — Environment Aware
 // ============================================================
-if (!defined('APP_ENV')) {
-    define('APP_ENV', 'production'); // Change to 'development' locally
-}
+$appEnv = getenv('APP_ENV') ? getenv('APP_ENV') : 'production';
+if (!defined('APP_ENV')) define('APP_ENV', $appEnv);
 
 if (APP_ENV === 'development') {
     error_reporting(E_ALL);
@@ -37,7 +41,7 @@ if (APP_ENV === 'development') {
 $conn = null;
 
 try {
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $conn = new mysqli($dbHost, $dbUser, $dbPass, $dbName, $dbPort);
 
     if ($conn->connect_error) {
         error_log('Database connection failed: ' . $conn->connect_error);
@@ -61,7 +65,6 @@ function getDBConnection() {
 
 /**
  * Sanitizes user input against XSS.
- * Use for display only — never rely on this alone for SQL safety (use prepared statements).
  */
 function sanitizeInput($data) {
     $data = trim($data);
@@ -72,7 +75,6 @@ function sanitizeInput($data) {
 
 /**
  * Returns an existing user's ID by email, or creates a new user record.
- * Always uses prepared statements.
  */
 function getUserIdByEmail($conn, $email, $name, $phone = null) {
     $email = trim($email);
@@ -87,7 +89,6 @@ function getUserIdByEmail($conn, $email, $name, $phone = null) {
         $row    = $result->fetch_assoc();
         $userId = $row['id'];
 
-        // Update phone if provided
         if (!empty($phone)) {
             $phone = trim($phone);
             $upd   = $conn->prepare("UPDATE users SET name = ?, phone = ? WHERE id = ?");
@@ -96,7 +97,6 @@ function getUserIdByEmail($conn, $email, $name, $phone = null) {
             $upd->close();
         }
     } else {
-        // Create new user
         $stmt->close();
         $stmt = $conn->prepare("INSERT INTO users (email, name, phone) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $email, $name, $phone);
@@ -109,7 +109,7 @@ function getUserIdByEmail($conn, $email, $name, $phone = null) {
 }
 
 /**
- * Logs user or admin activity to the activity_log table.
+ * Logs activity to the activity_log table.
  */
 function logActivity($conn, $userId, $action, $description = null) {
     $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;

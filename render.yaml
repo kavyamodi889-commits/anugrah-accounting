@@ -1,0 +1,18 @@
+# Render.com Blueprint for ANRUGH Accounting
+services:
+  - type: web
+    name: anugrah-accounting
+    env: docker
+    plan: free
+    region: singapore
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DB_HOST
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASS
+        sync: false
+      - key: DB_NAME
+        sync: false
