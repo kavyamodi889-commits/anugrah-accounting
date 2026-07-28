@@ -1,0 +1,21 @@
+# Environment & Sensitive Config
+*.env
+config.env.php
+
+# Logs & Temporary Data
+logs/
+*.log
+firewall_log.txt
+
+# Uploads (user uploaded documents)
+uploads/*
+!uploads/.gitkeep
+
+# IDE & OS Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Composer dependencies
+vendor/
