@@ -1,5 +1,6 @@
-<?php
-session_start();
+﻿<?php
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
 require_once 'config.php';
 
 // Check if admin is logged in

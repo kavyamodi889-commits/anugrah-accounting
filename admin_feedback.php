@@ -1,14 +1,11 @@
-<?php
-session_start();
-require_once 'db_config.php';
+﻿<?php
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
 
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: admin_login.php');
-    exit();
-}
+requireAdminLogin();
 
-$adminName = $_SESSION['admin_name'];
-$adminRole = $_SESSION['admin_role'];
+$adminName = getAdminName();
+$adminRole = getAdminRole();
 
 // Handle feedback response
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['respond'])) {

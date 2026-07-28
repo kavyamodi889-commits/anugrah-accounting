@@ -1,6 +1,7 @@
-<?php
-session_start();
-require_once 'db_config.php';
+﻿<?php
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
+// db_config.php unified in includes/db.php
 
 $success_message = '';
 $error_message = '';

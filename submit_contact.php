@@ -1,14 +1,9 @@
 <?php
-// Enable error reporting for debugging (remove in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 0); // Don't display errors to user
-ini_set('log_errors', 1);
-
 // Set JSON header
 header('Content-Type: application/json');
 
 // Include database configuration
-require_once 'db_config.php';
+require_once 'includes/db.php';
 
 // Initialize response array
 $response = array('success' => false, 'message' => '');

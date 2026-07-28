@@ -1,16 +1,12 @@
 <?php
-session_start();
-require_once 'db_config.php';
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
 
-// Check if admin is logged in
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: admin_login.php');
-    exit();
-}
+requireAdminLogin();
 
-$adminName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Admin';
-$adminRole = isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : 'Administrator';
-$adminId = $_SESSION['admin_id'];
+$adminName = getAdminName();
+$adminRole = getAdminRole();
+$adminId = getAdminId();
 
 // FORCE DISPLAY MODE - Add ?force=1 to URL to bypass all checks and show raw data
 $forceDisplay = isset($_GET['force']) ? true : false;

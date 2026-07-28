@@ -1,9 +1,6 @@
-﻿
 <?php
-session_start();
-   require_once 'auth_check.php';
-
-require_once 'db_config.php';
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
 
 // Fetch published feedback
 $published_feedbacks = $conn->query("SELECT f.*, u.name as user_name 

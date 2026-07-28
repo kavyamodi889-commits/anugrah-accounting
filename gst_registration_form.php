@@ -1,5 +1,6 @@
-<?php
-session_start();
+﻿<?php
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
 
 // Database connection with error handling
 $conn = null;
@@ -7,7 +8,7 @@ $db_error = false;
 $db_error_message = '';
 
 if (file_exists('db_config.php')) {
-    require_once 'db_config.php';
+    // db_config.php unified in includes/db.php
     
     if (!isset($conn) || $conn === null) {
         $db_error = true;

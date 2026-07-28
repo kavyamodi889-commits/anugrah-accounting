@@ -6,8 +6,8 @@
  * (Runs every day at 9:00 AM)
  */
 
-require_once 'db_config.php';
-require_once 'notification_config.php';
+require_once 'includes/db.php';
+require_once 'includes/email.php';
 
 echo "Starting automated reminders process...\n";
 echo "Time: " . date('Y-m-d H:i:s') . "\n\n";

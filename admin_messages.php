@@ -1,18 +1,11 @@
 <?php
-// Start session only if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
 
-require_once 'db_config.php';
+requireAdminLogin();
 
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: admin_login.php');
-    exit();
-}
-
-$adminName = $_SESSION['admin_name'];
-$adminRole = $_SESSION['admin_role'];
+$adminName = getAdminName();
+$adminRole = getAdminRole();
 $adminWhatsApp = '918000687342'; // Admin's WhatsApp number
 
 // Get customer statistics

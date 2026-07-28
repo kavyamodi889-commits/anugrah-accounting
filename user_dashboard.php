@@ -1,10 +1,7 @@
 <?php
-session_start();
-require_once 'db_config.php';
-require_once 'auth_check.php';
-
-// Require login
-requireLogin();
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
+requireUserLogin();
 
 $user_id = getUserId();
 $user_name = getUserName();

@@ -1,15 +1,12 @@
 <?php
-session_start();
-require_once 'db_config.php';
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
 
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: admin_login.php');
-    exit();
-}
+requireAdminLogin();
 
-$adminId = $_SESSION['admin_id'];
-$adminName = $_SESSION['admin_name'];
-$adminRole = $_SESSION['admin_role'];
+$adminId = getAdminId();
+$adminName = getAdminName();
+$adminRole = getAdminRole();
 
 // Fetch admin details
 $stmt = $conn->prepare("SELECT * FROM admin_users WHERE id = ?");

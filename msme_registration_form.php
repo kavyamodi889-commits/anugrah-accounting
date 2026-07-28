@@ -1,6 +1,7 @@
-<?php
-session_start();
-require_once 'db_config.php';
+﻿<?php
+require_once 'includes/db.php';
+require_once 'includes/auth.php';
+// db_config.php unified in includes/db.php
 
 // Check if email_config.php exists, if not use inline functions
 if (file_exists('email_config.php')) {
